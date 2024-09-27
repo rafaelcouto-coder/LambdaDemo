@@ -1,3 +1,4 @@
+using Amazon.DynamoDBv2.DataModel;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
 
@@ -14,9 +15,13 @@ public class Function
     /// the AWS credentials will come from the IAM role associated with the function and the AWS region will be set to the
     /// region the Lambda function is executed in.
     /// </summary>
-    public Function()
-    {
+    private readonly IDynamoDBContext _context;
+    private readonly ProcessOrdenUseCase _processOrdenUseCase;
 
+    public Function(IDynamoDBContext context, ProcessOrdenUseCase processOrdenUseCase)
+    {
+        _context = context;
+        _processOrdenUseCase = processOrdenUseCase;
     }
 
 
@@ -31,15 +36,7 @@ public class Function
     {
         foreach (var message in evnt.Records)
         {
-            await ProcessMessageAsync(message, context);
+            await _processOrdenUseCase.ProcessMessageAsync(message, context);
         }
-    }
-
-    private async Task ProcessMessageAsync(SQSEvent.SQSMessage message, ILambdaContext context)
-    {
-        context.Logger.LogInformation($"Processed message {message.Body}");
-
-        // TODO: Do interesting work based on the new message
-        await Task.CompletedTask;
     }
 }
