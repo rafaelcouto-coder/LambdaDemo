@@ -11,7 +11,7 @@ namespace AWSLambda1.Tests;
 public class FunctionTest
 {
     private readonly Mock<IDynamoDBContext> _mockContext;
-    private readonly Mock<ProcessOrdenUseCase> _mockProcessOrdenUseCase;
+    private readonly Mock<OrderProcessor> _mockProcessOrdenUseCase;
     private readonly Mock<IOptions<FakeStoreApiOptions>> _mockOptions;
 
     public FunctionTest()
@@ -24,7 +24,7 @@ public class FunctionTest
             BaseUrl = "https://fakestoreapi.com"
         });
 
-        _mockProcessOrdenUseCase = new Mock<ProcessOrdenUseCase>(_mockOptions.Object);
+        _mockProcessOrdenUseCase = new Mock<OrderProcessor>(_mockOptions.Object);
     }
 
     [Fact]

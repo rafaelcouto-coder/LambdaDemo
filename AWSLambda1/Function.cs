@@ -16,9 +16,9 @@ public class Function
     /// region the Lambda function is executed in.
     /// </summary>
     private readonly IDynamoDBContext _context;
-    private readonly ProcessOrdenUseCase _processOrdenUseCase;
+    private readonly OrderProcessor _processOrdenUseCase;
 
-    public Function(IDynamoDBContext context, ProcessOrdenUseCase processOrdenUseCase)
+    public Function(IDynamoDBContext context, OrderProcessor processOrdenUseCase)
     {
         _context = context;
         _processOrdenUseCase = processOrdenUseCase;
@@ -36,7 +36,7 @@ public class Function
     {
         foreach (var message in evnt.Records)
         {
-            await _processOrdenUseCase.ProcessMessageAsync(message, context);
+            await _processOrdenUseCase.ProcessOrderAsync(message, context);
         }
     }
 }

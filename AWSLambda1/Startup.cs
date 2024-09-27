@@ -18,6 +18,6 @@ public class Startup
         services.Configure<FakeStoreApiOptions>(options =>
             configuration.GetSection("FakeStoreApi").Bind(options));
 
-        services.AddTransient<ProcessOrdenUseCase>();
+        services.AddTransient<OrderProcessor>();
     }
 }
