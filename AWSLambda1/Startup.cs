@@ -1,8 +1,4 @@
-﻿using Amazon.DynamoDBv2;
-using Amazon.DynamoDBv2.DataModel;
-using Amazon.Lambda.Annotations;
-using AWSLambda1.Options;
-using Microsoft.Extensions.Configuration;
+﻿using Amazon.Lambda.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AWSLambda1;
@@ -10,14 +6,12 @@ namespace AWSLambda1;
 [LambdaStartup]
 public class Startup
 {
-    public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
+    public static ServiceProvider ConfigureServices()
     {
-        services.AddAWSService<IAmazonDynamoDB>();
-        services.AddScoped<IDynamoDBContext, DynamoDBContext>();
+        var serviceCollection = new ServiceCollection();
 
-        services.Configure<FakeStoreApiOptions>(options =>
-            configuration.GetSection("FakeStoreApi").Bind(options));
+        serviceCollection.AddTransient<OrderProcessor>();
 
-        services.AddTransient<OrderProcessor>();
+        return serviceCollection.BuildServiceProvider();
     }
 }

@@ -1,4 +1,5 @@
-﻿using Refit;
+﻿using AWSLambda1.Model;
+using Refit;
 
 namespace AWSLambda1.Interface;
 
