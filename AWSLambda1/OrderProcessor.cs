@@ -1,11 +1,11 @@
 ﻿using Amazon.Lambda.Core;
-using Amazon.Lambda.SQSEvents;
 using AWSLambda1.Interface;
 using Refit;
+using static Amazon.Lambda.SQSEvents.SQSEvent;
 
 namespace AWSLambda1;
 
-public class OrderProcessor
+public class OrderProcessor : IOrderProcessorService
 {
     private readonly IFakeStoreApi _fakeStoreApi;
 
@@ -14,7 +14,9 @@ public class OrderProcessor
         _fakeStoreApi = RestService.For<IFakeStoreApi>("https://fakestoreapi.com");
     }
 
-    public async Task ProcessOrderAsync(SQSEvent.SQSMessage message, ILambdaContext context)
+    public async Task ProcessOrderAsync(
+        SQSMessage message,
+        ILambdaContext context)
     {
         context.Logger.LogInformation($"Processed message {message.Body}");
 

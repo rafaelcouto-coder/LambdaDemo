@@ -1,31 +1,31 @@
+using Amazon.Lambda.Annotations;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SQSEvents;
 using Microsoft.Extensions.DependencyInjection;
 
-
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
-
-namespace AWSLambda1;
-
-public class Function
+namespace AWSLambda1
 {
-    private readonly OrderProcessor _orderProcessor;
-
-    public Function()
-        : this(Startup.ConfigureServices().GetRequiredService<OrderProcessor>())
+    public class Function
     {
-    }
+        private readonly IOrderProcessorService _orderProcessor;
 
-    public Function(OrderProcessor orderProcessor)
-    {
-        _orderProcessor = orderProcessor;
-    }
-
-    public async Task Handler(SQSEvent evnt, ILambdaContext context)
-    {
-        foreach (var message in evnt.Records)
+        public Function() : this(HostBuilderHelper.BuildHost().Services)
         {
-            await _orderProcessor.ProcessOrderAsync(message, context);
+        }
+
+        public Function(IServiceProvider serviceProvider)
+        {
+            _orderProcessor = serviceProvider.GetRequiredService<IOrderProcessorService>();
+        }
+
+        [LambdaFunction]
+        public async Task Handler(SQSEvent evnt, ILambdaContext context)
+        {
+            foreach (var message in evnt.Records)
+            {
+                await _orderProcessor.ProcessOrderAsync(message, context);
+            }
         }
     }
 }
